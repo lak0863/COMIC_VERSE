@@ -10,9 +10,28 @@ export const formatCurrency = (value) =>
 
 // Helper function to get image path with base URL for GitHub Pages
 export const getImagePath = (path) => {
-  // Remove leading slash if present, then add base URL
+  // Get base URL from Vite config or detect from current location
+  let baseUrl = import.meta.env.BASE_URL;
+  
+  // If BASE_URL is not set or is '/', try to detect from current path
+  if (!baseUrl || baseUrl === '/') {
+    const currentPath = window.location.pathname;
+    // Check if we're on GitHub Pages (path contains repo name)
+    if (currentPath.includes('/COMIC_VERSE/')) {
+      baseUrl = '/COMIC_VERSE/';
+    } else {
+      baseUrl = '/';
+    }
+  }
+  
+  // Ensure baseUrl ends with /
+  if (!baseUrl.endsWith('/')) {
+    baseUrl += '/';
+  }
+  
+  // Remove leading slash from path if present
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  const baseUrl = import.meta.env.BASE_URL || '/';
+  
   return `${baseUrl}${cleanPath}`;
 };
 
